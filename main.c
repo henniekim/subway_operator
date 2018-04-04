@@ -88,22 +88,27 @@ void EXTI15_10_IRQHandler (void)
 	if (system_state == MAIN_STATE)
 	{	
 		if (( EXTI->PR & 0x2000) != 0)  // FOR PC 13 : IN_BND
-		{	
-			led_data = 0x01;													system_state = IN_BND_STATE												EXTI->PR &= (1<<13);
+		{
+			led_data = 0x01;			
+			system_state = IN_BND_STATE;
+			EXTI->PR &= (1<<13);
 		}	
 		else if (( EXTI->PR & 0x4000) !=0) // FOR PC 14 : OUT_BND
-		{																led_data = 0x80;
+		{	
+			led_data = 0x80;
 			system_state = OUT_BND_STATE;
 			EXTI->PR &= (1<<14);
 		}
-		else if (( EXTI->PR & 0x8000) !=0) // FOR PC 15 : EMERG									{
+		else if (( EXTI->PR & 0x8000) !=0) // FOR PC 15 : EMERG									
+		{
 			EXTI->PR &= (1<<15);
 		}
 	}
 	else if (system_state == IN_BND_STATE)
 	{
 		if (( EXTI->PR & 0x2000) != 0)  // FOR PC 13 : IN_BND
-		{																if (led_data != 0xFF)
+		{	
+			if (led_data != 0xFF)
 			{
 				led_data = led_data*2 + 1;
 				system_state = IN_BND_STATE;
@@ -176,7 +181,6 @@ void EXTI15_10_IRQHandler (void)
 	NVIC->ICPR[1] |= (1<<8);
 }
 								
-
 void TIM2_IRQHandler (void)
 {
 	if ((TIM2->SR & 0x0001) != 0)
@@ -189,4 +193,3 @@ void TIM2_IRQHandler (void)
 		TIM2->SR &= ~(1<<0);
 	}
 }
-
